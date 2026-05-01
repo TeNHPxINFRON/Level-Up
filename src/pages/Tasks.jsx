@@ -38,15 +38,7 @@ function Tasks() {
     useState("Medium");
 
   const [totalXP, setTotalXP] =
-    useState(() => {
-
-      const savedXP =
-        localStorage.getItem("xp");
-
-      return savedXP
-        ? JSON.parse(savedXP)
-        : 0;
-    });
+    useState(0);
 
   const [searchTerm, setSearchTerm] =
     useState("");
@@ -59,7 +51,12 @@ function Tasks() {
 
   useEffect(() => {
 
-    fetchTasks();
+    const user =
+      auth.currentUser;
+
+    if (user) {
+      fetchTasks();
+    }
 
   }, []);
 
@@ -87,30 +84,32 @@ function Tasks() {
 
       const taskList = [];
 
-      querySnapshot.forEach((doc) => {
+      let xp = 0;
 
-        taskList.push({
-          id: doc.id,
-          ...doc.data(),
-        });
+      querySnapshot.forEach((docItem) => {
+
+        const taskData = {
+          id: docItem.id,
+          ...docItem.data(),
+        };
+
+        taskList.push(taskData);
+
+        if (taskData.xpClaimed) {
+          xp += taskData.xp;
+        }
+
       });
 
       setTasks(taskList);
+
+      setTotalXP(xp);
 
     } catch (error) {
 
       console.log(error);
     }
   }
-
-  useEffect(() => {
-
-    localStorage.setItem(
-      "xp",
-      JSON.stringify(totalXP)
-    );
-
-  }, [totalXP]);
 
   let filteredTasks = [...tasks];
 
@@ -160,6 +159,13 @@ function Tasks() {
       return;
     }
 
+    const user =
+      auth.currentUser;
+
+    if (!user) {
+      return;
+    }
+
     let xpReward = 20;
 
     if (priority === "High") {
@@ -181,9 +187,6 @@ function Tasks() {
     };
 
     try {
-
-      const user =
-        auth.currentUser;
 
       await addDoc(
 
@@ -216,6 +219,10 @@ function Tasks() {
       const user =
         auth.currentUser;
 
+      if (!user) {
+        return;
+      }
+
       await deleteDoc(
 
         doc(
@@ -242,6 +249,10 @@ function Tasks() {
       const user =
         auth.currentUser;
 
+      if (!user) {
+        return;
+      }
+
       const task =
         tasks.find(
           (task) => task.id === id
@@ -249,17 +260,6 @@ function Tasks() {
 
       if (!task) {
         return;
-      }
-
-      if (
-        !task.completed &&
-        !task.xpClaimed
-      ) {
-
-        setTotalXP(
-          (prevXP) =>
-            prevXP + task.xp
-        );
       }
 
       await updateDoc(
@@ -431,7 +431,7 @@ function Tasks() {
 
           <button
             onClick={addTask}
-            className="bg-black text-white px-6 rounded-lg"
+            className="bg-black text-white px-6 py-3 rounded-lg"
           >
             Add
           </button>

@@ -1,20 +1,36 @@
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+} from "react";
 
 import Layout from "../components/Layout";
 
+import { ThemeContext } from "../context/ThemeContext";
+
+import { motion } from "framer-motion";
+
 function FocusMode() {
 
-  const [minutes, setMinutes] = useState(25);
+  const { darkMode } =
+    useContext(ThemeContext);
 
-  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] =
+    useState(25);
 
-  const [isRunning, setIsRunning] = useState(false);
+  const [seconds, setSeconds] =
+    useState(0);
+
+  const [isRunning, setIsRunning] =
+    useState(false);
 
   const [sessionsCompleted, setSessionsCompleted] =
     useState(() => {
 
       const savedSessions =
-        localStorage.getItem("focusSessions");
+        localStorage.getItem(
+          "focusSessions"
+        );
 
       return savedSessions
         ? JSON.parse(savedSessions)
@@ -25,7 +41,9 @@ function FocusMode() {
 
     localStorage.setItem(
       "focusSessions",
-      JSON.stringify(sessionsCompleted)
+      JSON.stringify(
+        sessionsCompleted
+      )
     );
 
   }, [sessionsCompleted]);
@@ -38,11 +56,12 @@ function FocusMode() {
 
       timer = setInterval(() => {
 
-        if (seconds > 0) {
+        setSeconds((prevSeconds) => {
 
-          setSeconds(seconds - 1);
+          if (prevSeconds > 0) {
 
-        } else {
+            return prevSeconds - 1;
+          }
 
           if (minutes === 0) {
 
@@ -54,24 +73,40 @@ function FocusMode() {
               (prev) => prev + 1
             );
 
-            alert("Focus Session Completed!");
+            alert(
+              "Focus Session Completed!"
+            );
 
-          } else {
-
-            setMinutes(minutes - 1);
-
-            setSeconds(59);
+            return 0;
           }
-        }
+
+          setMinutes(
+            (prevMinutes) =>
+              prevMinutes - 1
+          );
+
+          return 59;
+        });
 
       }, 1000);
     }
 
-    return () => clearInterval(timer);
+    return () =>
+      clearInterval(timer);
 
-  }, [isRunning, minutes, seconds]);
+  }, [isRunning, minutes]);
 
   function startTimer() {
+
+    if (
+      minutes === 0 &&
+      seconds === 0
+    ) {
+
+      setMinutes(25);
+      setSeconds(0);
+    }
+
     setIsRunning(true);
   }
 
@@ -89,60 +124,103 @@ function FocusMode() {
   }
 
   return (
+
     <Layout>
 
-      <h1 className="text-3xl font-bold mb-8">
-        Focus Mode
-      </h1>
+      <motion.div
 
-      <div className="bg-white rounded-2xl shadow p-10 flex flex-col items-center">
+        initial={{
+          opacity: 0,
+          y: 20,
+        }}
 
-        <h2 className="text-7xl font-bold mb-8">
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
 
-          {String(minutes).padStart(2, "0")}:
+        transition={{
+          duration: 0.3,
+        }}
 
-          {String(seconds).padStart(2, "0")}
+      >
 
-        </h2>
+        <h1 className="text-3xl font-bold mb-8">
+          Focus Mode
+        </h1>
 
-        <div className="flex gap-4 mb-8">
+        <div
+          className={`rounded-2xl shadow p-10 flex flex-col items-center ${
+            darkMode
+              ? "bg-gray-800 text-white"
+              : "bg-white"
+          }`}
+        >
 
-          <button
-            onClick={startTimer}
-            className="bg-green-500 text-white px-6 py-3 rounded-xl"
-          >
-            Start
-          </button>
+          <h2 className="text-7xl font-bold mb-8">
 
-          <button
-            onClick={pauseTimer}
-            className="bg-yellow-500 text-white px-6 py-3 rounded-xl"
-          >
-            Pause
-          </button>
+            {String(minutes).padStart(
+              2,
+              "0"
+            )}
 
-          <button
-            onClick={resetTimer}
-            className="bg-red-500 text-white px-6 py-3 rounded-xl"
-          >
-            Reset
-          </button>
+            :
+
+            {String(seconds).padStart(
+              2,
+              "0"
+            )}
+
+          </h2>
+
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+
+            <button
+              onClick={startTimer}
+              disabled={isRunning}
+              className={`px-6 py-3 rounded-xl text-white transition ${
+                isRunning
+                  ? "bg-green-300 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600"
+              }`}
+            >
+              Start
+            </button>
+
+            <button
+              onClick={pauseTimer}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-xl transition"
+            >
+              Pause
+            </button>
+
+            <button
+              onClick={resetTimer}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition"
+            >
+              Reset
+            </button>
+
+          </div>
+
+          <div className="text-xl">
+
+            Sessions Completed:
+
+            {" "}
+
+            <span className="font-bold">
+              {sessionsCompleted}
+            </span>
+
+          </div>
 
         </div>
 
-        <div className="text-xl">
-
-          Sessions Completed:
-          {" "}
-          <span className="font-bold">
-            {sessionsCompleted}
-          </span>
-
-        </div>
-
-      </div>
+      </motion.div>
 
     </Layout>
+
   );
 }
 

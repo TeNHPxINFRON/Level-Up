@@ -35,12 +35,12 @@ function TaskCard({
         duration: 0.3,
       }}
 
-      className={`p-4 rounded-xl shadow flex justify-between items-center ${
+      className={`p-4 rounded-xl shadow flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${
         task.completed
-          ? "bg-green-100"
+          ? "bg-green-100 text-black"
           : darkMode
           ? "bg-gray-800 text-white"
-          : "bg-white"
+          : "bg-white text-black"
       }`}
     >
 
@@ -76,7 +76,7 @@ function TaskCard({
           onClick={() =>
             toggleComplete(task.id)
           }
-          className="bg-green-500 text-white px-4 py-2 rounded-lg"
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition"
         >
           {task.completed
             ? "Undo"
@@ -87,7 +87,7 @@ function TaskCard({
           onClick={() =>
             deleteTask(task.id)
           }
-          className="bg-red-500 text-white px-4 py-2 rounded-lg"
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
         >
           Delete
         </button>

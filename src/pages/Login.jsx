@@ -22,7 +22,7 @@ function Login() {
         provider
       );
 
-      navigate("/dashboard");
+      navigate("/");
 
     } catch (error) {
 

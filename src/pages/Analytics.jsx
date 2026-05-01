@@ -47,17 +47,20 @@ function Analytics() {
 
   const highPriority =
     tasks.filter(
-      (task) => task.priority === "High"
+      (task) =>
+        task.priority === "High"
     ).length;
 
   const mediumPriority =
     tasks.filter(
-      (task) => task.priority === "Medium"
+      (task) =>
+        task.priority === "Medium"
     ).length;
 
   const lowPriority =
     tasks.filter(
-      (task) => task.priority === "Low"
+      (task) =>
+        task.priority === "Low"
     ).length;
 
   const chartData = [
@@ -76,37 +79,33 @@ function Analytics() {
   ];
 
   return (
+
     <Layout>
 
       <h1 className="text-3xl font-bold mb-6">
         Analytics
       </h1>
 
-      <div className="grid grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -122,28 +121,23 @@ function Analytics() {
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -159,28 +153,23 @@ function Analytics() {
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -196,28 +185,23 @@ function Analytics() {
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -234,31 +218,26 @@ function Analytics() {
 
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
         <motion.div
-
           whileHover={{
             scale: 1.02,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -283,10 +262,10 @@ function Analytics() {
 
               </div>
 
-              <div className="w-full bg-gray-300 rounded-full h-4">
+              <div className="w-full bg-gray-300 rounded-full h-4 overflow-hidden">
 
                 <div
-                  className="bg-green-500 h-4 rounded-full"
+                  className="bg-green-500 h-4"
                   style={{
                     width: `${completionRate}%`,
                   }}
@@ -299,6 +278,7 @@ function Analytics() {
             <div className="mt-4 text-lg">
 
               You completed
+
               {" "}
 
               <span className="font-bold">
@@ -306,7 +286,9 @@ function Analytics() {
               </span>
 
               {" "}
+
               out of
+
               {" "}
 
               <span className="font-bold">
@@ -314,6 +296,7 @@ function Analytics() {
               </span>
 
               {" "}
+
               tasks.
 
             </div>
@@ -323,28 +306,23 @@ function Analytics() {
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.02,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
-          className={`p-6 rounded-xl shadow ${
+          className={`p-6 rounded-xl shadow min-h-[450px] ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -353,22 +331,41 @@ function Analytics() {
             Priority Distribution
           </h2>
 
-          <div className="h-80">
+          <div className="w-full h-[320px]">
 
             <ResponsiveContainer
               width="100%"
               height="100%"
             >
 
-              <BarChart data={chartData}>
+              <BarChart
+                data={chartData}
+              >
 
-                <XAxis dataKey="name" />
+                <XAxis
+                  dataKey="name"
+                  stroke={
+                    darkMode
+                      ? "#ffffff"
+                      : "#000000"
+                  }
+                />
 
-                <YAxis />
+                <YAxis
+                  stroke={
+                    darkMode
+                      ? "#ffffff"
+                      : "#000000"
+                  }
+                />
 
                 <Tooltip />
 
-                <Bar dataKey="tasks" />
+                <Bar
+                  dataKey="tasks"
+                  fill="#3b82f6"
+                  radius={[8, 8, 0, 0]}
+                />
 
               </BarChart>
 
@@ -381,6 +378,7 @@ function Analytics() {
       </div>
 
     </Layout>
+
   );
 }
 

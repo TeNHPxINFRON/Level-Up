@@ -12,7 +12,7 @@ function Sidebar() {
   return (
 
     <div
-      className={`w-full md:w-64 h-screen p-5 ${
+      className={`w-full md:w-64 min-h-screen p-5 ${
         darkMode
           ? "bg-black text-white"
           : "bg-gray-900 text-white"

@@ -1,4 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -13,6 +17,7 @@ import Profile from "./pages/Profile";
 function App() {
 
   return (
+
     <BrowserRouter>
 
       <Routes>
@@ -45,7 +50,7 @@ function App() {
         />
 
         <Route
-          path="/focus"
+          path="/focus-mode"
           element={
             <ProtectedRoute>
               <FocusMode />
@@ -72,9 +77,19 @@ function App() {
           element={<Signup />}
         />
 
+        <Route
+          path="*"
+          element={
+            <div className="flex items-center justify-center h-screen text-2xl font-bold">
+              404 - Page Not Found
+            </div>
+          }
+        />
+
       </Routes>
 
     </BrowserRouter>
+
   );
 }
 

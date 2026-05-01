@@ -61,6 +61,7 @@ function Dashboard() {
   ];
 
   return (
+
     <Layout>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -70,28 +71,23 @@ function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -100,35 +96,30 @@ function Dashboard() {
             Total Tasks
           </h2>
 
-          <p className="text-3xl md:text-4xl font-bold">
+          <p className="text-4xl font-bold">
             {tasks.length}
           </p>
 
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -137,35 +128,30 @@ function Dashboard() {
             Completed Tasks
           </h2>
 
-          <p className="text-3xl md:text-4xl font-bold text-green-500">
+          <p className="text-4xl font-bold text-green-500">
             {completedTasks.length}
           </p>
 
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -174,35 +160,30 @@ function Dashboard() {
             Total XP
           </h2>
 
-          <p className="text-3xl md:text-4xl font-bold">
+          <p className="text-4xl font-bold">
             {totalXP}
           </p>
 
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.03,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -211,7 +192,7 @@ function Dashboard() {
             Current Level
           </h2>
 
-          <p className="text-3xl md:text-4xl font-bold text-yellow-500">
+          <p className="text-4xl font-bold text-yellow-500">
             Level {level}
           </p>
 
@@ -220,24 +201,20 @@ function Dashboard() {
       </div>
 
       <motion.div
-
         initial={{
           opacity: 0,
           y: 20,
         }}
-
         animate={{
           opacity: 1,
           y: 0,
         }}
-
         transition={{
           duration: 0.3,
         }}
-
         className={`p-6 rounded-xl shadow mb-8 ${
           darkMode
-            ? "bg-gray-800"
+            ? "bg-gray-800 text-white"
             : "bg-white"
         }`}
       >
@@ -254,10 +231,10 @@ function Dashboard() {
 
         </div>
 
-        <div className="w-full bg-gray-300 rounded-full h-5">
+        <div className="w-full bg-gray-300 rounded-full h-5 overflow-hidden">
 
           <div
-            className="bg-yellow-500 h-5 rounded-full"
+            className="bg-yellow-500 h-5"
             style={{
               width: `${currentLevelXP}%`,
             }}
@@ -268,6 +245,7 @@ function Dashboard() {
         <p className="mt-3 text-sm text-gray-500">
 
           Reach
+
           {" "}
 
           <span className="font-bold">
@@ -275,7 +253,9 @@ function Dashboard() {
           </span>
 
           {" "}
+
           at
+
           {" "}
 
           <span className="font-bold">
@@ -289,28 +269,23 @@ function Dashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
         <motion.div
-
           whileHover={{
             scale: 1.02,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
-          className={`p-6 rounded-xl shadow ${
+          className={`p-6 rounded-xl shadow min-h-[450px] ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -319,7 +294,7 @@ function Dashboard() {
             Task Overview
           </h2>
 
-          <div className="h-80">
+          <div className="w-full h-[350px]">
 
             <ResponsiveContainer
               width="100%"
@@ -331,7 +306,9 @@ function Dashboard() {
                 <Pie
                   data={chartData}
                   dataKey="value"
-                  outerRadius={100}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={120}
                   label
                 >
 
@@ -359,28 +336,23 @@ function Dashboard() {
         </motion.div>
 
         <motion.div
-
           whileHover={{
             scale: 1.02,
           }}
-
           initial={{
             opacity: 0,
             y: 20,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 0.3,
           }}
-
           className={`p-6 rounded-xl shadow ${
             darkMode
-              ? "bg-gray-800"
+              ? "bg-gray-800 text-white"
               : "bg-white"
           }`}
         >
@@ -391,29 +363,39 @@ function Dashboard() {
 
           <div className="flex flex-col gap-4">
 
-            {tasks.slice(0, 5).map(
-              (task) => (
+            {tasks.length > 0 ? (
 
-                <div
-                  key={task.id}
-                  className={`border p-4 rounded-lg ${
-                    darkMode
-                      ? "bg-gray-700 border-gray-600"
-                      : "bg-gray-50"
-                  }`}
-                >
+              tasks.slice(0, 5).map(
+                (task) => (
 
-                  <h3 className="font-semibold">
-                    {task.title}
-                  </h3>
+                  <div
+                    key={task.id}
+                    className={`border p-4 rounded-lg ${
+                      darkMode
+                        ? "bg-gray-700 border-gray-600"
+                        : "bg-gray-50"
+                    }`}
+                  >
 
-                  <p className="text-sm text-gray-500">
-                    {task.category}
-                  </p>
+                    <h3 className="font-semibold">
+                      {task.title}
+                    </h3>
 
-                </div>
+                    <p className="text-sm text-gray-500">
+                      {task.category}
+                    </p>
 
+                  </div>
+
+                )
               )
+
+            ) : (
+
+              <p className="text-gray-500">
+                No tasks available
+              </p>
+
             )}
 
           </div>
@@ -423,24 +405,20 @@ function Dashboard() {
       </div>
 
       <motion.div
-
         initial={{
           opacity: 0,
           y: 20,
         }}
-
         animate={{
           opacity: 1,
           y: 0,
         }}
-
         transition={{
           duration: 0.3,
         }}
-
         className={`p-6 rounded-xl shadow mt-8 ${
           darkMode
-            ? "bg-gray-800"
+            ? "bg-gray-800 text-white"
             : "bg-white"
         }`}
       >
@@ -492,6 +470,7 @@ function Dashboard() {
       </motion.div>
 
     </Layout>
+
   );
 }
 
