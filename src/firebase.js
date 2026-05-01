@@ -6,17 +6,17 @@ import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
 
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBQTTq6CzO8CBzC3V0GCNBdUqRf0yCOFzw",
 
-  authDomain: "YOUR_AUTH_DOMAIN",
+  authDomain: "levelup-2eda8.firebaseapp.com",
 
-  projectId: "YOUR_PROJECT_ID",
+  projectId: "levelup-2eda8",
 
-  storageBucket: "YOUR_STORAGE_BUCKET",
+  storageBucket: "levelup-2eda8.firebasestorage.app",
 
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  messagingSenderId: "168746730",
 
-  appId: "YOUR_APP_ID",
+  appId: "1:168746730:web:5c8934a25ac58767b78193",
 };
 
 const app =
