@@ -1,11 +1,58 @@
-import { Navigate } from "react-router-dom";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  Navigate,
+} from "react-router-dom";
+
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
+
+import { auth } from "../firebase";
 
 function ProtectedRoute({ children }) {
 
-  const isLoggedIn =
-    localStorage.getItem("isLoggedIn");
+  const [user, setUser] =
+    useState(null);
 
-  if (!isLoggedIn) {
+  const [loading, setLoading] =
+    useState(true);
+
+  useEffect(() => {
+
+    const unsubscribe =
+      onAuthStateChanged(
+
+        auth,
+
+        (currentUser) => {
+
+          setUser(currentUser);
+
+          setLoading(false);
+        }
+      );
+
+    return () => unsubscribe();
+
+  }, []);
+
+  if (loading) {
+
+    return (
+
+      <div className="flex justify-center items-center min-h-screen text-2xl">
+
+        Loading...
+
+      </div>
+    );
+  }
+
+  if (!user) {
 
     return <Navigate to="/login" />;
   }
