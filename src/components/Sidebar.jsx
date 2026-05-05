@@ -37,10 +37,6 @@ function Sidebar() {
           Analytics
         </Link>
 
-        <Link to="/focus">
-          Focus Mode
-        </Link>
-
         <Link to="/profile">
           Profile
         </Link>

@@ -1,6 +1,10 @@
 import Layout from "../components/Layout";
 
-import { useContext } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { ThemeContext } from "../context/ThemeContext";
 
@@ -14,16 +18,84 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import { auth, db } from "../firebase";
+
+import {
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
+
 function Dashboard() {
 
   const { darkMode } =
     useContext(ThemeContext);
 
-  const tasks =
-    JSON.parse(localStorage.getItem("tasks")) || [];
+  const [tasks, setTasks] =
+    useState([]);
 
-  const totalXP =
-    JSON.parse(localStorage.getItem("xp")) || 0;
+  const [totalXP, setTotalXP] =
+    useState(0);
+
+  useEffect(() => {
+
+    const unsubscribeAuth =
+      auth.onAuthStateChanged(
+        (user) => {
+
+          if (!user) {
+            return;
+          }
+
+          const unsubscribeTasks =
+            onSnapshot(
+
+              collection(
+                db,
+                "users",
+                user.uid,
+                "tasks"
+              ),
+
+              (snapshot) => {
+
+                const taskList = [];
+
+                let xp = 0;
+
+                snapshot.forEach(
+                  (docItem) => {
+
+                    const taskData = {
+                      id: docItem.id,
+                      ...docItem.data(),
+                    };
+
+                    taskList.push(taskData);
+
+                    if (
+                      taskData.xpClaimed
+                    ) {
+
+                      xp += taskData.xp;
+                    }
+                  }
+                );
+
+                setTasks(taskList);
+
+                setTotalXP(xp);
+              }
+            );
+
+          return () =>
+            unsubscribeTasks();
+        }
+      );
+
+    return () =>
+      unsubscribeAuth();
+
+  }, []);
 
   const level =
     Math.floor(totalXP / 100) + 1;
@@ -74,17 +146,6 @@ function Dashboard() {
           whileHover={{
             scale: 1.03,
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
           className={`p-6 rounded-xl shadow ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -105,17 +166,6 @@ function Dashboard() {
         <motion.div
           whileHover={{
             scale: 1.03,
-          }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
           }}
           className={`p-6 rounded-xl shadow ${
             darkMode
@@ -138,17 +188,6 @@ function Dashboard() {
           whileHover={{
             scale: 1.03,
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
           className={`p-6 rounded-xl shadow ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -170,17 +209,6 @@ function Dashboard() {
           whileHover={{
             scale: 1.03,
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
           className={`p-6 rounded-xl shadow ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -200,18 +228,7 @@ function Dashboard() {
 
       </div>
 
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.3,
-        }}
+      <div
         className={`p-6 rounded-xl shadow mb-8 ${
           darkMode
             ? "bg-gray-800 text-white"
@@ -264,25 +281,11 @@ function Dashboard() {
 
         </p>
 
-      </motion.div>
+      </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 min-w-0">
 
-        <motion.div
-          whileHover={{
-            scale: 1.02,
-          }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
+        <div
           className={`p-6 rounded-xl shadow min-h-[450px] ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -294,7 +297,7 @@ function Dashboard() {
             Task Overview
           </h2>
 
-          <div className="w-full h-[350px]">
+          <div className="w-full h-[350px] min-w-0">
 
             <ResponsiveContainer
               width="100%"
@@ -333,23 +336,9 @@ function Dashboard() {
 
           </div>
 
-        </motion.div>
+        </div>
 
-        <motion.div
-          whileHover={{
-            scale: 1.02,
-          }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
+        <div
           className={`p-6 rounded-xl shadow ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -400,74 +389,9 @@ function Dashboard() {
 
           </div>
 
-        </motion.div>
-
-      </div>
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.3,
-        }}
-        className={`p-6 rounded-xl shadow mt-8 ${
-          darkMode
-            ? "bg-gray-800 text-white"
-            : "bg-white"
-        }`}
-      >
-
-        <h2 className="text-2xl font-semibold mb-6">
-          Achievements
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-
-          <div className="bg-yellow-500 text-black p-5 rounded-xl">
-
-            <h3 className="text-xl font-bold mb-2">
-              Beginner
-            </h3>
-
-            <p>
-              Earn 100 XP
-            </p>
-
-          </div>
-
-          <div className="bg-gray-400 text-black p-5 rounded-xl">
-
-            <h3 className="text-xl font-bold mb-2">
-              Consistent
-            </h3>
-
-            <p>
-              Complete 10 Tasks
-            </p>
-
-          </div>
-
-          <div className="bg-orange-500 text-black p-5 rounded-xl">
-
-            <h3 className="text-xl font-bold mb-2">
-              Focus Master
-            </h3>
-
-            <p>
-              Finish 5 Focus Sessions
-            </p>
-
-          </div>
-
         </div>
 
-      </motion.div>
+      </div>
 
     </Layout>
 

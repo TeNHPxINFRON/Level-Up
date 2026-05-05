@@ -9,7 +9,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Analytics from "./pages/Analytics";
-import FocusMode from "./pages/FocusMode";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
@@ -49,14 +48,6 @@ function App() {
           }
         />
 
-        <Route
-          path="/focus-mode"
-          element={
-            <ProtectedRoute>
-              <FocusMode />
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/profile"

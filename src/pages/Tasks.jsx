@@ -14,10 +14,10 @@ import { auth, db } from "../firebase";
 import {
   collection,
   addDoc,
-  getDocs,
   deleteDoc,
   doc,
   updateDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 function Tasks() {
@@ -28,6 +28,9 @@ function Tasks() {
   const [tasks, setTasks] =
     useState([]);
 
+  const [totalXP, setTotalXP] =
+    useState(0);
+
   const [title, setTitle] =
     useState("");
 
@@ -36,9 +39,6 @@ function Tasks() {
 
   const [priority, setPriority] =
     useState("Medium");
-
-  const [totalXP, setTotalXP] =
-    useState(0);
 
   const [searchTerm, setSearchTerm] =
     useState("");
@@ -51,74 +51,75 @@ function Tasks() {
 
   useEffect(() => {
 
-    const user =
-      auth.currentUser;
+    const unsubscribeAuth =
+      auth.onAuthStateChanged(
+        (user) => {
 
-    if (user) {
-      fetchTasks();
-    }
+          if (!user) {
+            return;
+          }
+
+          const unsubscribeTasks =
+            onSnapshot(
+
+              collection(
+                db,
+                "users",
+                user.uid,
+                "tasks"
+              ),
+
+              (snapshot) => {
+
+                const taskList = [];
+
+                let xp = 0;
+
+                snapshot.forEach(
+                  (docItem) => {
+
+                    const taskData = {
+                      id: docItem.id,
+                      ...docItem.data(),
+                    };
+
+                    taskList.push(taskData);
+
+                    if (
+                      taskData.xpClaimed
+                    ) {
+
+                      xp += taskData.xp;
+                    }
+                  }
+                );
+
+                setTasks(taskList);
+
+                setTotalXP(xp);
+              }
+            );
+
+          return () =>
+            unsubscribeTasks();
+        }
+      );
+
+    return () =>
+      unsubscribeAuth();
 
   }, []);
 
-  async function fetchTasks() {
-
-    try {
-
-      const user =
-        auth.currentUser;
-
-      if (!user) {
-        return;
-      }
-
-      const querySnapshot =
-        await getDocs(
-
-          collection(
-            db,
-            "users",
-            user.uid,
-            "tasks"
-          )
-        );
-
-      const taskList = [];
-
-      let xp = 0;
-
-      querySnapshot.forEach((docItem) => {
-
-        const taskData = {
-          id: docItem.id,
-          ...docItem.data(),
-        };
-
-        taskList.push(taskData);
-
-        if (taskData.xpClaimed) {
-          xp += taskData.xp;
-        }
-
-      });
-
-      setTasks(taskList);
-
-      setTotalXP(xp);
-
-    } catch (error) {
-
-      console.log(error);
-    }
-  }
-
   let filteredTasks = [...tasks];
 
-  filteredTasks = filteredTasks.filter(
-    (task) =>
-      task.title.toLowerCase().includes(
-        searchTerm.toLowerCase()
-      )
-  );
+  filteredTasks =
+    filteredTasks.filter((task) =>
+      task.title
+        .toLowerCase()
+        .includes(
+          searchTerm.toLowerCase()
+        )
+    );
 
   if (filterStatus === "Completed") {
 
@@ -156,6 +157,11 @@ function Tasks() {
   async function addTask() {
 
     if (!title || !category) {
+
+      alert(
+        "Please fill all fields"
+      );
+
       return;
     }
 
@@ -178,11 +184,18 @@ function Tasks() {
 
     const newTask = {
 
+      createdAt: Date.now(),
+
       title,
+
       category,
+
       priority,
+
       xp: xpReward,
+
       completed: false,
+
       xpClaimed: false,
     };
 
@@ -200,16 +213,14 @@ function Tasks() {
         newTask
       );
 
-      fetchTasks();
+      setTitle("");
+      setCategory("");
+      setPriority("Medium");
 
     } catch (error) {
 
       console.log(error);
     }
-
-    setTitle("");
-    setCategory("");
-    setPriority("Medium");
   }
 
   async function deleteTask(id) {
@@ -233,8 +244,6 @@ function Tasks() {
           id
         )
       );
-
-      fetchTasks();
 
     } catch (error) {
 
@@ -282,8 +291,6 @@ function Tasks() {
         }
       );
 
-      fetchTasks();
-
     } catch (error) {
 
       console.log(error);
@@ -291,6 +298,7 @@ function Tasks() {
   }
 
   return (
+
     <Layout>
 
       <div className="flex justify-between items-center mb-6">
@@ -346,9 +354,7 @@ function Tasks() {
           >
 
             <option>All</option>
-
             <option>Completed</option>
-
             <option>Pending</option>
 
           </select>
@@ -368,7 +374,6 @@ function Tasks() {
           >
 
             <option>Default</option>
-
             <option>High</option>
 
           </select>
@@ -422,18 +427,18 @@ function Tasks() {
           >
 
             <option>Low</option>
-
             <option>Medium</option>
-
             <option>High</option>
 
           </select>
 
           <button
             onClick={addTask}
-            className="bg-black text-white px-6 py-3 rounded-lg"
+            className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg transition"
           >
+
             Add
+
           </button>
 
         </div>

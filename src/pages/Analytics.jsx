@@ -1,6 +1,10 @@
 import Layout from "../components/Layout";
 
-import { useContext } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { ThemeContext } from "../context/ThemeContext";
 
@@ -15,16 +19,84 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import { auth, db } from "../firebase";
+
+import {
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
+
 function Analytics() {
 
   const { darkMode } =
     useContext(ThemeContext);
 
-  const tasks =
-    JSON.parse(localStorage.getItem("tasks")) || [];
+  const [tasks, setTasks] =
+    useState([]);
 
-  const totalXP =
-    JSON.parse(localStorage.getItem("xp")) || 0;
+  const [totalXP, setTotalXP] =
+    useState(0);
+
+  useEffect(() => {
+
+    const unsubscribeAuth =
+      auth.onAuthStateChanged(
+        (user) => {
+
+          if (!user) {
+            return;
+          }
+
+          const unsubscribeTasks =
+            onSnapshot(
+
+              collection(
+                db,
+                "users",
+                user.uid,
+                "tasks"
+              ),
+
+              (snapshot) => {
+
+                const taskList = [];
+
+                let xp = 0;
+
+                snapshot.forEach(
+                  (docItem) => {
+
+                    const taskData = {
+                      id: docItem.id,
+                      ...docItem.data(),
+                    };
+
+                    taskList.push(taskData);
+
+                    if (
+                      taskData.xpClaimed
+                    ) {
+
+                      xp += taskData.xp;
+                    }
+                  }
+                );
+
+                setTasks(taskList);
+
+                setTotalXP(xp);
+              }
+            );
+
+          return () =>
+            unsubscribeTasks();
+        }
+      );
+
+    return () =>
+      unsubscribeAuth();
+
+  }, []);
 
   const completedTasks =
     tasks.filter(
@@ -92,17 +164,6 @@ function Analytics() {
           whileHover={{
             scale: 1.03,
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
           className={`p-6 rounded-xl shadow ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -123,17 +184,6 @@ function Analytics() {
         <motion.div
           whileHover={{
             scale: 1.03,
-          }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
           }}
           className={`p-6 rounded-xl shadow ${
             darkMode
@@ -156,17 +206,6 @@ function Analytics() {
           whileHover={{
             scale: 1.03,
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
           className={`p-6 rounded-xl shadow ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -188,17 +227,6 @@ function Analytics() {
           whileHover={{
             scale: 1.03,
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
           className={`p-6 rounded-xl shadow ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -218,22 +246,11 @@ function Analytics() {
 
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 min-w-0">
 
         <motion.div
           whileHover={{
             scale: 1.02,
-          }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
           }}
           className={`p-6 rounded-xl shadow ${
             darkMode
@@ -309,17 +326,6 @@ function Analytics() {
           whileHover={{
             scale: 1.02,
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
           className={`p-6 rounded-xl shadow min-h-[450px] ${
             darkMode
               ? "bg-gray-800 text-white"
@@ -378,7 +384,6 @@ function Analytics() {
       </div>
 
     </Layout>
-
   );
 }
 
