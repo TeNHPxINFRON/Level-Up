@@ -1,7 +1,12 @@
 import {
   signInWithRedirect,
   GoogleAuthProvider,
+  onAuthStateChanged,
 } from "firebase/auth";
+
+import {
+  useEffect,
+} from "react";
 
 import { auth } from "../firebase";
 
@@ -11,6 +16,26 @@ function Login() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+
+    const unsubscribe =
+      onAuthStateChanged(
+
+        auth,
+
+        (user) => {
+
+          if (user) {
+
+            navigate("/");
+          }
+        }
+      );
+
+    return () => unsubscribe();
+
+  }, [navigate]);
+
   async function handleGoogleLogin() {
 
     try {
@@ -19,11 +44,9 @@ function Login() {
         new GoogleAuthProvider();
 
       await signInWithRedirect(
-  auth,
-  provider
-);
-
-      navigate("/");
+        auth,
+        provider
+      );
 
     } catch (error) {
 
@@ -44,9 +67,7 @@ function Login() {
         </h1>
 
         <button
-
           onClick={handleGoogleLogin}
-
           className="w-full bg-black text-white py-3 rounded-xl"
         >
 
