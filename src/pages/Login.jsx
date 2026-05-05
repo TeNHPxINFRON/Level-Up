@@ -1,6 +1,7 @@
-import { signInWithPopup } from "firebase/auth";
-
-import { GoogleAuthProvider } from "firebase/auth";
+import {
+  signInWithRedirect,
+  GoogleAuthProvider,
+} from "firebase/auth";
 
 import { auth } from "../firebase";
 
@@ -17,10 +18,10 @@ function Login() {
       const provider =
         new GoogleAuthProvider();
 
-      await signInWithPopup(
-        auth,
-        provider
-      );
+      await signInWithRedirect(
+  auth,
+  provider
+);
 
       navigate("/");
 
