@@ -6,7 +6,7 @@ import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyBQTTq6CzO8CBzC3V0GCNBdUqRf0yCOFzw",
+  apiKey: "AIzaSyBQTTq6CzO8CBzC3V0GCNBdUqRf0yCOFzw", 
 
   authDomain: "levelup-2eda8.firebaseapp.com",
 
