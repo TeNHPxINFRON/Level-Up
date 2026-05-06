@@ -1,8 +1,16 @@
 import {
-  signInWithRedirect,
+  signInWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth";
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("Logged in:", user);
+  } else {
+    console.log("Not logged in");
+  }
+});
 
 import {
   useEffect,
@@ -43,10 +51,7 @@ function Login() {
       const provider =
         new GoogleAuthProvider();
 
-      await signInWithRedirect(
-        auth,
-        provider
-      );
+      await signInWithPopup(auth, provider);
 
     } catch (error) {
 

@@ -52,10 +52,7 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  if (!user) {
-
-    return <Navigate to="/login" />;
-  }
+  if (loading) return <p>Loading...</p>;
 
   return children;
 }
